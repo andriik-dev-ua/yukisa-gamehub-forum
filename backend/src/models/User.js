@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { avatarDataUri } from '../utils/avatar.js';
 
 const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true, trim: true, minlength: 3 },
     email: { type: String, required: true, unique: true, trim: true, lowercase: true },
     password: { type: String, required: true, minlength: 6 },
-    avatar: { type: String, default: 'https://api.dicebear.com/8.x/bottts/svg?seed=GameHub' },
+    avatar: { type: String, default: () => avatarDataUri('GameHub') },
     bio: { type: String, default: 'Nowy gracz w społeczności GameHub.' },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     isBlocked: { type: Boolean, default: false },

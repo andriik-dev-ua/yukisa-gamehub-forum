@@ -7,15 +7,16 @@ import Like from '../models/Like.js';
 import Notification from '../models/Notification.js';
 import Topic from '../models/Topic.js';
 import User from '../models/User.js';
+import { avatarDataUri } from '../utils/avatar.js';
 
 dotenv.config();
 await connectDB();
 await Promise.all([User.deleteMany(), Category.deleteMany(), Topic.deleteMany(), Comment.deleteMany(), Like.deleteMany(), Notification.deleteMany()]);
 
 const [admin, player, moderator] = await User.create([
-  { username: 'admin', email: 'admin@gamehub.pl', password: 'admin123', role: 'admin', points: 120, avatar: 'https://api.dicebear.com/8.x/bottts/svg?seed=Admin' },
-  { username: 'pixelowyLis', email: 'lis@gamehub.pl', password: 'test1234', points: 64, avatar: 'https://api.dicebear.com/8.x/bottts/svg?seed=Fox' },
-  { username: 'retroMistrz', email: 'retro@gamehub.pl', password: 'test1234', points: 91, avatar: 'https://api.dicebear.com/8.x/bottts/svg?seed=Retro' }
+  { username: 'admin', email: 'admin@gamehub.pl', password: 'admin123', role: 'admin', points: 120, avatar: avatarDataUri('Admin') },
+  { username: 'pixelowyLis', email: 'lis@gamehub.pl', password: 'test1234', points: 64, avatar: avatarDataUri('Fox') },
+  { username: 'retroMistrz', email: 'retro@gamehub.pl', password: 'test1234', points: 91, avatar: avatarDataUri('Retro') }
 ]);
 
 const categories = await Category.create([

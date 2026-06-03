@@ -173,3 +173,47 @@ Aplikacja zawiera stopkę:
 
 > Autor: Andrii K., 4cT gr.1, CKZiU Nr 2 w Raciborzu Mechanik.  
 > Projekt edukacyjny wykonany przy wsparciu Yuki S.A.
+
+## 12. Publikacja na GitHub Pages i GitHub Actions
+
+GitHub Pages może opublikować **tylko frontend statyczny** z katalogu `frontend/dist`. Backend Express i baza MongoDB nie działają na GitHub Pages, dlatego pełna wersja Full Stack wymaga dodatkowego hostingu API, np. Render, Railway, Fly.io, VPS albo innej usługi Node.js, oraz bazy MongoDB Atlas.
+
+W repozytorium dodano dwa workflow GitHub Actions:
+
+- `.github/workflows/ci.yml` — instaluje zależności, buduje frontend i sprawdza składnię backendu.
+- `.github/workflows/frontend-pages.yml` — buduje frontend Vite i publikuje go na GitHub Pages.
+
+### Kroki dla GitHub Pages
+
+1. Wypchnij projekt na GitHub.
+2. Wejdź w `Settings → Pages`.
+3. W sekcji `Build and deployment` ustaw `Source: GitHub Actions`.
+4. Jeśli backend jest już wdrożony, wejdź w `Settings → Secrets and variables → Actions → Variables` i dodaj zmienną:
+
+```txt
+VITE_API_URL=https://twoj-backend.example.com/api
+```
+
+5. Wykonaj push na gałąź `main` albo uruchom ręcznie workflow `Deploy frontend to GitHub Pages` przez zakładkę `Actions`.
+6. Po udanym workflow GitHub pokaże adres strony w sekcji `Deploy to GitHub Pages`.
+
+### Kroki dla backendu
+
+Na hostingu Node.js ustaw:
+
+```txt
+Root directory: backend
+Build command: npm install
+Start command: npm start
+```
+
+Zmienne środowiskowe backendu:
+
+```txt
+PORT=5000
+MONGO_URI=<adres MongoDB Atlas lub innej bazy MongoDB>
+JWT_SECRET=<dlugie-bezpieczne-haslo>
+CLIENT_URLS=<adres GitHub Pages frontendu>
+```
+
+Po wdrożeniu backendu wpisz jego adres jako `VITE_API_URL` w zmiennych GitHub Actions frontendu, np. `https://gamehub-api.onrender.com/api`.
